@@ -20,7 +20,8 @@ class SessionCache implements \SessionHandlerInterface
     }
     public function destroy($sessionID)
     {
-        return $this->cache->del($sessionID, $this->table);
+        $this->cache->delete($sessionID, $this->table);
+        return true;
     }
     public function gc($maxlifetime)
     {
@@ -32,12 +33,18 @@ class SessionCache implements \SessionHandlerInterface
     }
     public function read($sessionID)
     {
-        $data = $this->cache->get($sessionID, $this->table);
+        try {
+            $data = $this->cache->get($sessionID, $this->table);
+        }
+        catch (\vakata\cache\CacheException $e) {
+            return '';
+        }
 
         return $data ? $data : '';
     }
     public function write($sessionID, $sessionData)
     {
-        return $this->cache->set($sessionID, $sessionData, $this->table, $this->expire);
+        $this->cache->set($sessionID, $sessionData, $this->table, $this->expire);
+        return true;
     }
 }
