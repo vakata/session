@@ -18,17 +18,37 @@ $ composer require vakata/session
 
 ## Usage
 
+Using the `$_SESSION` superglobal is perfectly fine and works well with this class.
+
 ``` php
-$config = new \vakata\session\Storage([ 'sample' => [ 'data' => 1] ]);
-$config->get('sample.data'); // 1
-$config->set('sample.data', 2); // 2
-$config->get('sample.data'); // 2
-$config->del('sample.data'); // true
-$config->get('sample.data'); // null
-$config->get('sample.data', 'default'); // "default"
-$config->set('new.data.to.add', 2); // 2
-$config->get('new.data'); // [ 'to' => [ 'add' => 2 ] ]
+$session = new \vakata\session\Session(); // autostarts session and applies useful defaults
+$session->get('value'); // same as $_SESSION['value'];
+$session->set('val.ue', 2); // same as $_SESSION['val'] = [ 'ue' => 1 ];
+$session->del('value'); // same as unset($_SESSION['value']);
+// optionally sessions can be stored in a database
+$sessionDB = new \vakata\session\Session(
+    new \vakata\sessions\SessionDatabase(
+        new \vakata\database\DB('mysqli://user:pass@host/database'),
+        'table'
+    )
+);
+// optionally sessions can be stored in memcached
+$sessionDB = new \vakata\session\Session(
+    new \vakata\sessions\SessionCache(
+        new \vakata\cache\Memcache(),
+        'table'
+    )
+);
 ```
+
+For more on setting, getting and deleting values read here:
+https://github.com/vakata/kvstore
+
+For more on the database class read here:
+https://github.com/vakata/database
+
+For more on the memcached class read here:
+https://github.com/vakata/cache
 
 ## Testing
 
