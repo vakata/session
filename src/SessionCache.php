@@ -35,8 +35,7 @@ class SessionCache implements \SessionHandlerInterface
     {
         try {
             $data = $this->cache->get($sessionID, $this->table);
-        }
-        catch (\vakata\cache\CacheException $e) {
+        } catch (\vakata\cache\CacheException $e) {
             return '';
         }
 

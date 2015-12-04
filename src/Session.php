@@ -38,8 +38,7 @@ class Session implements StorageInterface
         if (!$start) {
             if (isset($_SESSION)) {
                 $this->storage = new Storage($_SESSION);
-            }
-            else {
+            } else {
                 $this->storage = new Storage();
             }
         }
