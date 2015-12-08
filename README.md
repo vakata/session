@@ -27,6 +27,7 @@ $session->set('val.ue', 2); // same as $_SESSION['val'] = [ 'ue' => 1 ];
 $session->del('value'); // same as unset($_SESSION['value']);
 // optionally sessions can be stored in a database
 $sessionDB = new \vakata\session\Session(
+    true, // autostart
     new \vakata\sessions\SessionDatabase(
         new \vakata\database\DB('mysqli://user:pass@host/database'),
         'table'
@@ -34,6 +35,7 @@ $sessionDB = new \vakata\session\Session(
 );
 // optionally sessions can be stored in memcached
 $sessionDB = new \vakata\session\Session(
+    true, // autostart
     new \vakata\sessions\SessionCache(
         new \vakata\cache\Memcache(),
         'table'
