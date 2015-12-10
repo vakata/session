@@ -33,12 +33,12 @@ $sessionDB = new \vakata\session\Session(
         'table'
     )
 );
-// optionally sessions can be stored in memcached
+// optionally sessions can be stored in memcached / filecache / database
 $sessionDB = new \vakata\session\Session(
     true, // autostart
     new \vakata\sessions\SessionCache(
         new \vakata\cache\Memcache(),
-        'table'
+        'namespace' // this allows easy clearing
     )
 );
 ```
