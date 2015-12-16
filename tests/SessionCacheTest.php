@@ -19,7 +19,7 @@ class SessionCacheTest extends \PHPUnit_Framework_TestCase
 	}
 
 	public function testCreate() {
-		self::$sessionDB = new \vakata\session\SessionCache(self::$db, 'test');
+		self::$sessionDB = new \vakata\session\handler\SessionCache(self::$db, 'test');
 		$this->assertEquals(true, self::$sessionDB instanceof \SessionHandlerInterface);
 	}
 	/**

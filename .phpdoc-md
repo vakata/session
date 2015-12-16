@@ -1,0 +1,11 @@
+<?php
+return (object)[
+    'rootNamespace' => 'vakata\session',
+    'destDirectory' => 'docs',
+    'format' => 'github',
+    'classes' => [
+        '\\vakata\\session\\Session',
+        '\\vakata\\session\\handler\\SessionCache',
+        '\\vakata\\session\\handler\\SessionDatabase'
+    ],
+];

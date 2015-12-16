@@ -28,7 +28,7 @@ $session->del('value'); // same as unset($_SESSION['value']);
 // optionally sessions can be stored in a database
 $sessionDB = new \vakata\session\Session(
     true, // autostart
-    new \vakata\sessions\SessionDatabase(
+    new \vakata\sessions\handler\SessionDatabase(
         new \vakata\database\DB('mysqli://user:pass@host/database'),
         'table'
     )
@@ -36,12 +36,14 @@ $sessionDB = new \vakata\session\Session(
 // optionally sessions can be stored in memcached / filecache / database
 $sessionDB = new \vakata\session\Session(
     true, // autostart
-    new \vakata\sessions\SessionCache(
+    new \vakata\sessions\handler\SessionCache(
         new \vakata\cache\Memcache(),
         'namespace' // this allows easy clearing
     )
 );
 ```
+
+Read more in the [API docs](docs/README.md)
 
 For more on setting, getting and deleting values read here:
 https://github.com/vakata/kvstore

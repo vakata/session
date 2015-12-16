@@ -31,7 +31,7 @@ class SessionDatabaseTest extends \PHPUnit_Framework_TestCase
 	}
 
 	public function testCreate() {
-		self::$sessionDB = new \vakata\session\SessionDatabase(self::$db, 'test');
+		self::$sessionDB = new \vakata\session\handler\SessionDatabase(self::$db, 'test');
 		$this->assertEquals(true, self::$sessionDB instanceof \SessionHandlerInterface);
 	}
 	/**

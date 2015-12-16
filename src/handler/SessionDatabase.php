@@ -1,12 +1,20 @@
 <?php
 
-namespace vakata\session;
+namespace vakata\session\handler;
 
+/**
+ * A session handler for storing sessions in database.
+ */
 class SessionDatabase implements \SessionHandlerInterface
 {
     private $db = null;
     private $tb = null;
-
+    /**
+     * Create an instance.
+     * @method __construct
+     * @param  \vakata\database\DatabaseInterface $db the database instance to use
+     * @param  string                             $tb the sessions table (defaults to `'sessions'`)
+     */
     public function __construct(\vakata\database\DatabaseInterface $db, $tb = 'sessions')
     {
         $this->db = $db;
