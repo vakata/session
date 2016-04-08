@@ -41,13 +41,7 @@ class SessionCache implements \SessionHandlerInterface
     }
     public function read($sessionID)
     {
-        try {
-            $data = $this->cache->get($sessionID, $this->table);
-        } catch (\vakata\cache\CacheException $e) {
-            return '';
-        }
-
-        return $data ? $data : '';
+        return $this->cache->get($sessionID, '', $this->table);
     }
     public function write($sessionID, $sessionData)
     {

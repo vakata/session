@@ -7,7 +7,7 @@ class SessionCacheTest extends \PHPUnit_Framework_TestCase
 	protected static $sessionDB = null;
 
 	public static function setUpBeforeClass() {
-		self::$db = new \vakata\cache\Memcache();
+		self::$db = new \vakata\cache\Redis();
 	}
 	public static function tearDownAfterClass() {
 	}
@@ -31,9 +31,9 @@ class SessionCacheTest extends \PHPUnit_Framework_TestCase
 	}
 	public function testWrite() {
 		$this->assertEquals(true, self::$sessionDB->write('test', 'test'));
-		$this->assertEquals('test', self::$db->get('test', 'test'));
+		$this->assertEquals('test', self::$db->get('test', null, 'test'));
 		$this->assertEquals(true, self::$sessionDB->write('test', 'test2'));
-		$this->assertEquals('test2', self::$db->get('test', 'test'));
+		$this->assertEquals('test2', self::$db->get('test', null, 'test'));
 	}
 	/**
 	 * @depends testWrite
@@ -54,7 +54,6 @@ class SessionCacheTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDestroy() {
 		$this->assertEquals(true, self::$sessionDB->destroy('test'));
-		$this->setExpectedException('\vakata\cache\CacheException');
-		$this->assertEquals(null, self::$db->get('test', 'test'));
+		$this->assertEquals(null, self::$db->get('test', null, 'test'));
 	}
 }
