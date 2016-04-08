@@ -31,6 +31,10 @@ class Session implements StorageInterface
         ini_set('session.cookie_httponly', true);
         ini_set('session.use_trans_sid', false);
         ini_set('session.name', $name);
+        if (!(int)ini_get('session.gc_probability') || !(int)ini_get('session.gc_divisor')) {
+            ini_set('session.gc_probability', '1');
+            ini_set('session.gc_divisor', '100');
+        }
 
         if (!$handler && $location) {
             session_save_path($location);
