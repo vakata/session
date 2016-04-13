@@ -68,6 +68,17 @@ class Session implements StorageInterface
         }
     }
     /**
+     * closes the session
+     * @method close
+     * @codeCoverageIgnore
+     */
+    public function close()
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+    }
+    /**
      * destroys the session (if started)
      * @method destroy
      * @codeCoverageIgnore
