@@ -62,11 +62,22 @@ class Session implements StorageInterface
      */
     public function start()
     {
-        if (session_status() === PHP_SESSION_NONE) {
+        if (!$this->isStarted()) {
             session_start();
             $this->storage = new Storage($_SESSION);
         }
     }
+    /**
+     * checks if the session is started
+     * @method isStarted
+     * @return bool is the session started
+     * @codeCoverageIgnore
+     */
+    public function isStarted()
+    {
+        return session_status() === PHP_SESSION_ACTIVE;
+    }
+    
     /**
      * closes the session
      * @method close
@@ -74,7 +85,7 @@ class Session implements StorageInterface
      */
     public function close()
     {
-        if (session_status() === PHP_SESSION_ACTIVE) {
+        if ($this->isStarted()) {
             session_write_close();
         }
     }
@@ -85,20 +96,20 @@ class Session implements StorageInterface
      */
     public function destroy()
     {
-        if (session_status() === PHP_SESSION_NONE) {
+        if ($this->isStarted()) {
             session_destroy();
         }
     }
     /**
      * regenerates the session ID
      * @method regenerate
-     * @param  boolean     $keepOld should the old session data be kept
+     * @param  boolean     $deleteOld should the old session data be removed
      * @codeCoverageIgnore
      */
-    public function regenerate($keepOld)
+    public function regenerate($deleteOld)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_regenerate_id($keepOld);
+        if ($this->isStarted()) {
+            session_regenerate_id($deleteOld);
         }
     }
     /**
