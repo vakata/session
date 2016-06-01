@@ -14,30 +14,34 @@ class Session implements StorageInterface
      * @method __construct
      * @param  boolean                       $start    should the session be started immediately, defaults to true
      * @param  \SessionHandlerInterface|null $handler  a session handler (if any)
-     * @param  string                        $name     name of the session cookie, defaults to "PHPSESSID"
-     * @param  string                        $location location of session files on disk (only if no handler is used)
+     * @param  array                         $cookie   an array of cookie options (name, path, httponly, lifetime)
      */
     public function __construct(
         $start = true,
         \SessionHandlerInterface $handler = null,
-        $name = 'PHPSESSID',
-        $location = ''
+        array $cookie = []
     ) {
         ini_set('session.use_cookies', true);
         ini_set("session.entropy_file", "/dev/urandom");
         ini_set("session.entropy_length", "32");
         ini_set('session.session.hash_bits_per_character', 6);
         ini_set('session.use_only_cookies', true);
-        ini_set('session.cookie_httponly', true);
         ini_set('session.use_trans_sid', false);
-        ini_set('session.name', $name);
+        ini_set('session.session.use_strict_mode', true);
         if (!(int)ini_get('session.gc_probability') || !(int)ini_get('session.gc_divisor')) {
             ini_set('session.gc_probability', '1');
             ini_set('session.gc_divisor', '100');
         }
 
-        if (!$handler && $location) {
-            session_save_path($location);
+        $cookie = array_merge([
+            'name' => 'PHPSESSID',
+            'path' => '/',
+            'lifetime' => 0,
+            'httponly' => true
+        ], $cookie);
+        ini_set('session.name', $cookie['name']);
+        foreach ($cookie as $setting => $value) {
+            ini_set('session.cookie_' . $setting, $value);
         }
         if ($handler) {
             ini_set('session.save_handler', 'user');
@@ -46,13 +50,8 @@ class Session implements StorageInterface
         }
         if ($start) {
             $this->start();
-        }
-        if (!$start) {
-            if (isset($_SESSION)) {
-                $this->storage = new Storage($_SESSION);
-            } else {
-                $this->storage = new Storage();
-            }
+        } else {
+            $this->storage = isset($_SESSION) ? new Storage($_SESSION) : new Storage();
         }
     }
     /**
@@ -103,10 +102,10 @@ class Session implements StorageInterface
     /**
      * regenerates the session ID
      * @method regenerate
-     * @param  boolean     $deleteOld should the old session data be removed
+     * @param  boolean     $deleteOld should the old session data be removed, defaults to `true`
      * @codeCoverageIgnore
      */
-    public function regenerate($deleteOld)
+    public function regenerate($deleteOld = true)
     {
         if ($this->isStarted()) {
             session_regenerate_id($deleteOld);
