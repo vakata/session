@@ -2,6 +2,8 @@
 
 namespace vakata\session\handler;
 
+use \vakata\cache\CacheInterface;
+
 /**
  * A session handler for storing sessions in cache (like memcached).
  */
@@ -16,7 +18,7 @@ class SessionCache implements \SessionHandlerInterface
      * @param  \vakata\cache\CacheInterface $cache the cache instance
      * @param  string                       $table the cache namespace to use
      */
-    public function __construct(\vakata\cache\CacheInterface $cache, $table = 'sessions')
+    public function __construct(CacheInterface $cache, $table = 'sessions')
     {
         $this->cache = $cache;
         $this->table = $table;
