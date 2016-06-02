@@ -140,7 +140,7 @@ class Session implements StorageInterface
      * @method set
      * @param  string $key       the element to delete (can be a deeply nested element of the data array)
      * @param  string $separator the string used to separate levels of the array, defaults to "."
-     * @return boolean           the status of the del operation - true if successful, false otherwise
+     * @return mixed|null        the deleted value (or null)
      */
     public function del($key, $separator = '.')
     {
