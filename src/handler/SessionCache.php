@@ -14,7 +14,6 @@ class SessionCache implements \SessionHandlerInterface
     private $expire = null;
     /**
      * Create an instance.
-     * @method __construct
      * @param  \vakata\cache\CacheInterface $cache the cache instance
      * @param  string                       $table the cache namespace to use
      */

@@ -11,7 +11,6 @@ class Session implements StorageInterface
 
     /**
      * creates a session object
-     * @method __construct
      * @param  boolean                       $start    should the session be started immediately, defaults to true
      * @param  \SessionHandlerInterface|null $handler  a session handler (if any)
      * @param  array                         $cookie   an array of cookie options (name, path, httponly, lifetime)
@@ -56,7 +55,6 @@ class Session implements StorageInterface
     }
     /**
      * starts the session (if not done already)
-     * @method start
      * @codeCoverageIgnore
      */
     public function start()
@@ -68,7 +66,6 @@ class Session implements StorageInterface
     }
     /**
      * checks if the session is started
-     * @method isStarted
      * @return bool is the session started
      * @codeCoverageIgnore
      */
@@ -79,7 +76,6 @@ class Session implements StorageInterface
     
     /**
      * closes the session
-     * @method close
      * @codeCoverageIgnore
      */
     public function close()
@@ -90,7 +86,6 @@ class Session implements StorageInterface
     }
     /**
      * destroys the session (if started)
-     * @method destroy
      * @codeCoverageIgnore
      */
     public function destroy()
@@ -101,7 +96,6 @@ class Session implements StorageInterface
     }
     /**
      * regenerates the session ID
-     * @method regenerate
      * @param  boolean     $deleteOld should the old session data be removed, defaults to `true`
      * @codeCoverageIgnore
      */
@@ -113,7 +107,6 @@ class Session implements StorageInterface
     }
     /**
      * get a key from the storage by using a string locator
-     * @method get
      * @param  string $key       the element to get (can be a deeply nested element of the data array)
      * @param  mixed  $default   the default value to return if the key is not found in the data
      * @param  string $separator the string used to separate levels of the array, defaults to "."
@@ -125,7 +118,6 @@ class Session implements StorageInterface
     }
     /**
      * set an element in the storage to a specified value
-     * @method set
      * @param  string $key       the element to set (can be a deeply nested element of the data array)
      * @param  mixed  $value     the value to assign the selected element to
      * @param  string $separator the string used to separate levels of the array, defaults to "."
@@ -137,7 +129,6 @@ class Session implements StorageInterface
     }
     /**
      * delete an element from the storage
-     * @method set
      * @param  string $key       the element to delete (can be a deeply nested element of the data array)
      * @param  string $separator the string used to separate levels of the array, defaults to "."
      * @return mixed|null        the deleted value (or null)

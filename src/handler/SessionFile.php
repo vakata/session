@@ -11,7 +11,6 @@ class SessionFile implements \SessionHandlerInterface
     private $prefix;
     /**
      * Create an instance.
-     * @method __construct
      * @param  string $location the directory to store files in
      */
     public function __construct($location, $prefix = '')
