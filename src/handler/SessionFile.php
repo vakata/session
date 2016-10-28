@@ -22,6 +22,11 @@ class SessionFile implements \SessionHandlerInterface
     {
         return true;
     }
+    /**
+     * Destroy the session
+     * @param  string  $sessionID the session ID
+     * @return bool             was the session destroyed
+     */
     public function destroy($sessionID)
     {
         $file = $this->location . DIRECTORY_SEPARATOR . $this->prefix . $sessionID;
@@ -30,6 +35,11 @@ class SessionFile implements \SessionHandlerInterface
         }
         return true;
     }
+    /**
+     * Clean sessions
+     * @param  string  $maxlifetime the session maxlifetime
+     * @return bool                 was gc executed OK
+     */
     public function gc($maxlifetime)
     {
         foreach (scandir($this->location) as $name) {
@@ -43,6 +53,12 @@ class SessionFile implements \SessionHandlerInterface
         }
         return true;
     }
+    /**
+     * Open a session
+     * @param  string $path path
+     * @param  string $name session name
+     * @return bool         was open OK
+     */
     public function open($path, $name)
     {
         if (!is_dir($this->location) && !mkdir($this->location, 0755, true)) {
@@ -50,10 +66,21 @@ class SessionFile implements \SessionHandlerInterface
         }
         return true;
     }
+    /**
+     * Read a session
+     * @param  string $sessionID the session ID
+     * @return string            the session data
+     */
     public function read($sessionID)
     {
         return (string)@file_get_contents($this->location . DIRECTORY_SEPARATOR . $this->prefix . $sessionID);
     }
+    /**
+     * Write session data
+     * @param  string $sessionID   the session ID
+     * @param  string $sessionData the sessino data
+     * @return bool                was the write successful
+     */
     public function write($sessionID, $sessionData)
     {
         return @file_put_contents(
