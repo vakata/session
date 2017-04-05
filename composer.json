@@ -25,7 +25,7 @@
     "require": {
         "php" : ">=5.4.0",
         "vakata/kvstore" : ">=1.0.2",
-        "vakata/database" : ">=1.0.1",
+        "vakata/database" : "^3.0.2",
         "vakata/cache" : ">=2.0.0"
     },
     "require-dev": {

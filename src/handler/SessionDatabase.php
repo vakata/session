@@ -11,10 +11,10 @@ class SessionDatabase implements \SessionHandlerInterface
     private $tb = null;
     /**
      * Create an instance.
-     * @param  \vakata\database\DatabaseInterface $db the database instance to use
+     * @param  \vakata\database\DBInterface       $db the database instance to use
      * @param  string                             $tb the sessions table (defaults to `'sessions'`)
      */
-    public function __construct(\vakata\database\DatabaseInterface $db, $tb = 'sessions')
+    public function __construct(\vakata\database\DBInterface $db, $tb = 'sessions')
     {
         $this->db = $db;
         $this->tb = $tb;
