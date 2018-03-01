@@ -43,7 +43,7 @@ class Session implements StorageInterface
             ini_set('session.cookie_' . $setting, $value);
         }
         if ($handler) {
-            ini_set('session.save_handler', 'user');
+            //ini_set('session.save_handler', 'user');
             session_set_save_handler($handler);
             register_shutdown_function('session_write_close');
         }
