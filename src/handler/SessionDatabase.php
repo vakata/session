@@ -20,7 +20,7 @@ class SessionDatabase implements \SessionHandlerInterface
         $this->tb = $tb;
     }
 
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -29,23 +29,22 @@ class SessionDatabase implements \SessionHandlerInterface
      * @param  string  $sessionID the session ID
      * @return bool             was the session destroyed
      */
-    public function destroy($sessionID)
+    public function destroy(string $sessionID): bool
     {
         $this->db->query("DELETE FROM {$this->tb} WHERE id = ?", [$sessionID]);
         return true;
     }
     /**
      * Clean sessions
-     * @param  string  $maxlifetime the session maxlifetime
-     * @return bool                 was gc executed OK
+     * @param  int  $maxlifetime the session maxlifetime
+     * @return int                 was gc executed OK
      */
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime): bool
     {
-        $this->db->query(
+        return $this->db->query(
             "DELETE FROM {$this->tb} WHERE updated < ?",
             [ date('Y-m-d H:i:s', (time() - (int)$maxlifetime)) ]
-        );
-        return true;
+        )->affected();
     }
     /**
      * Open a session
@@ -53,7 +52,7 @@ class SessionDatabase implements \SessionHandlerInterface
      * @param  string $name session name
      * @return bool         was open OK
      */
-    public function open($path, $name)
+    public function open(string $path, string $name): bool
     {
         return true;
     }
@@ -62,10 +61,9 @@ class SessionDatabase implements \SessionHandlerInterface
      * @param  string $sessionID the session ID
      * @return string            the session data
      */
-    public function read($sessionID)
+    public function read(string $sessionID): string
     {
-        $data = $this->db->one("SELECT data FROM {$this->tb} WHERE id = ?", [$sessionID]);
-        return $data ? $data : '';
+        return (string)$this->db->one("SELECT data FROM {$this->tb} WHERE id = ?", [$sessionID]);
     }
     /**
      * Write session data
@@ -73,7 +71,7 @@ class SessionDatabase implements \SessionHandlerInterface
      * @param  string $sessionData the sessino data
      * @return bool                was the write successful
      */
-    public function write($sessionID, $sessionData)
+    public function write(string $sessionID, string $sessionData): bool
     {
         $this->db->query(
             "INSERT INTO {$this->tb} (id, data, created, updated) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE data = ?, updated = ?",

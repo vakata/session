@@ -23,7 +23,7 @@ class SessionCache implements \SessionHandlerInterface
         $this->table = $table;
         $this->expire = (int)ini_get('session.gc_maxlifetime');
     }
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -32,7 +32,7 @@ class SessionCache implements \SessionHandlerInterface
      * @param  string  $sessionID the session ID
      * @return bool             was the session destroyed
      */
-    public function destroy($sessionID)
+    public function destroy(string $sessionID): bool
     {
         $this->cache->delete($sessionID, $this->table);
         return true;
@@ -42,9 +42,9 @@ class SessionCache implements \SessionHandlerInterface
      * @param  string  $maxlifetime the session maxlifetime
      * @return bool                 was gc executed OK
      */
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime): int
     {
-        return true;
+        return 0;
     }
     /**
      * Open a session
@@ -52,7 +52,7 @@ class SessionCache implements \SessionHandlerInterface
      * @param  string $name session name
      * @return bool         was open OK
      */
-    public function open($path, $name)
+    public function open(string $path, string $name): bool
     {
         return true;
     }
@@ -61,7 +61,7 @@ class SessionCache implements \SessionHandlerInterface
      * @param  string $sessionID the session ID
      * @return string            the session data
      */
-    public function read($sessionID)
+    public function read(string $sessionID): string
     {
         return $this->cache->get($sessionID, '', $this->table);
     }
@@ -71,7 +71,7 @@ class SessionCache implements \SessionHandlerInterface
      * @param  string $sessionData the sessino data
      * @return bool                was the write successful
      */
-    public function write($sessionID, $sessionData)
+    public function write(string $sessionID, string $sessionData): bool
     {
         $this->cache->set($sessionID, $sessionData, $this->table, $this->expire);
         return true;

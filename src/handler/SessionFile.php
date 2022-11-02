@@ -18,7 +18,7 @@ class SessionFile implements \SessionHandlerInterface
         $this->location = $location;
         $this->prefix = $prefix;
     }
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -27,7 +27,7 @@ class SessionFile implements \SessionHandlerInterface
      * @param  string  $sessionID the session ID
      * @return bool             was the session destroyed
      */
-    public function destroy($sessionID)
+    public function destroy(string $sessionID): bool
     {
         $file = $this->location . DIRECTORY_SEPARATOR . $this->prefix . $sessionID;
         if (file_exists($file)) {
@@ -37,11 +37,12 @@ class SessionFile implements \SessionHandlerInterface
     }
     /**
      * Clean sessions
-     * @param  string  $maxlifetime the session maxlifetime
-     * @return bool                 was gc executed OK
+     * @param  int  $maxlifetime the session maxlifetime
+     * @return int               number of deleted sessions
      */
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime): int
     {
+        $count = 0;
         foreach (scandir($this->location) as $name) {
             $file = $this->location . DIRECTORY_SEPARATOR . $name;
             if ((!$this->prefix || strpos($name , $this->prefix) === 0) &&
@@ -49,9 +50,10 @@ class SessionFile implements \SessionHandlerInterface
                 filemtime($file) + $maxlifetime < time()
             ) {
                 @unlink($file);
+                $count ++;
             }
         }
-        return true;
+        return $count;
     }
     /**
      * Open a session
@@ -59,7 +61,7 @@ class SessionFile implements \SessionHandlerInterface
      * @param  string $name session name
      * @return bool         was open OK
      */
-    public function open($path, $name)
+    public function open(string $path, string $name): bool
     {
         if (!is_dir($this->location) && !mkdir($this->location, 0755, true)) {
             throw new \Exception('Could not open session storage dir');
@@ -71,7 +73,7 @@ class SessionFile implements \SessionHandlerInterface
      * @param  string $sessionID the session ID
      * @return string            the session data
      */
-    public function read($sessionID)
+    public function read(string $sessionID): string
     {
         return (string)@file_get_contents($this->location . DIRECTORY_SEPARATOR . $this->prefix . $sessionID);
     }
@@ -81,7 +83,7 @@ class SessionFile implements \SessionHandlerInterface
      * @param  string $sessionData the sessino data
      * @return bool                was the write successful
      */
-    public function write($sessionID, $sessionData)
+    public function write(string $sessionID, string $sessionData): bool
     {
         return @file_put_contents(
             $this->location . DIRECTORY_SEPARATOR . $this->prefix . $sessionID,
