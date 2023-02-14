@@ -2,9 +2,6 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Code Climate][ico-cc]][link-cc]
-[![Tests Coverage][ico-cc-coverage]][link-cc]
 
 A simple key-value storage class. used for configurations and extended in vakata/session.
 
@@ -42,8 +39,6 @@ $sessionDB = new \vakata\session\Session(
     )
 );
 ```
-
-Read more in the [API docs](docs/README.md)
 
 For more on setting, getting and deleting values read here:
 https://github.com/vakata/kvstore

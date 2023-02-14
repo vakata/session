@@ -7,7 +7,7 @@ use \vakata\kvstore\Storage;
 
 class Session implements StorageInterface
 {
-    protected $storage;
+    protected StorageInterface $storage;
 
     /**
      * creates a session object
@@ -57,7 +57,7 @@ class Session implements StorageInterface
      * starts the session (if not done already)
      * @codeCoverageIgnore
      */
-    public function start()
+    public function start(): void
     {
         if (!$this->isStarted()) {
             session_start();
@@ -69,7 +69,7 @@ class Session implements StorageInterface
      * @return bool is the session started
      * @codeCoverageIgnore
      */
-    public function isStarted()
+    public function isStarted(): bool
     {
         return session_status() === PHP_SESSION_ACTIVE;
     }
@@ -78,7 +78,7 @@ class Session implements StorageInterface
      * closes the session
      * @codeCoverageIgnore
      */
-    public function close()
+    public function close(): void
     {
         if ($this->isStarted()) {
             session_write_close();
@@ -88,7 +88,7 @@ class Session implements StorageInterface
      * destroys the session (if started)
      * @codeCoverageIgnore
      */
-    public function destroy()
+    public function destroy(): void
     {
         if ($this->isStarted()) {
             session_destroy();
@@ -99,7 +99,7 @@ class Session implements StorageInterface
      * @param  boolean     $deleteOld should the old session data be removed, defaults to `true`
      * @codeCoverageIgnore
      */
-    public function regenerate($deleteOld = true)
+    public function regenerate(bool $deleteOld = true): void
     {
         if ($this->isStarted()) {
             session_regenerate_id($deleteOld);
@@ -112,7 +112,7 @@ class Session implements StorageInterface
      * @param  string $separator the string used to separate levels of the array, defaults to "."
      * @return mixed             the value of that element in the data array (or the default value)
      */
-    public function get($key, $default = null, $separator = '.')
+    public function get(string $key, mixed $default = null, string $separator = '.'): mixed
     {
         return $this->storage->get($key, $default, $separator);
     }
@@ -123,7 +123,7 @@ class Session implements StorageInterface
      * @param  string $separator the string used to separate levels of the array, defaults to "."
      * @return mixed             the stored value
      */
-    public function set($key, $value, $separator = '.')
+    public function set(string $key, mixed $value, string $separator = '.'): mixed
     {
         return $this->storage->set($key, $value, $separator);
     }
@@ -133,7 +133,7 @@ class Session implements StorageInterface
      * @param  string $separator the string used to separate levels of the array, defaults to "."
      * @return mixed|null        the deleted value (or null)
      */
-    public function del($key, $separator = '.')
+    public function del(string $key, string $separator = '.'): mixed
     {
         return $this->storage->del($key, $separator);
     }
