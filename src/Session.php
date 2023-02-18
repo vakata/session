@@ -13,37 +13,9 @@ class Session implements StorageInterface
      * creates a session object
      * @param  boolean                       $start    should the session be started immediately, defaults to true
      * @param  \SessionHandlerInterface|null $handler  a session handler (if any)
-     * @param  array                         $cookie   an array of cookie options (name, path, httponly, lifetime)
      */
-    public function __construct(
-        $start = true,
-        \SessionHandlerInterface $handler = null,
-        array $cookie = []
-    ) {
-        ini_set('session.use_cookies', true);
-        ini_set("session.entropy_file", "/dev/urandom");
-        ini_set("session.entropy_length", "32");
-        ini_set('session.session.hash_bits_per_character', 6);
-        ini_set('session.use_only_cookies', true);
-        ini_set('session.use_trans_sid', false);
-        ini_set('session.session.use_strict_mode', true);
-        if (!(int)ini_get('session.gc_probability') || !(int)ini_get('session.gc_divisor')) {
-            ini_set('session.gc_probability', '1');
-            ini_set('session.gc_divisor', '100');
-        }
-
-        $cookie = array_merge([
-            'name' => 'PHPSESSID',
-            'path' => '/',
-            'lifetime' => 0,
-            'httponly' => true
-        ], $cookie);
-        ini_set('session.name', $cookie['name']);
-        foreach ($cookie as $setting => $value) {
-            ini_set('session.cookie_' . $setting, $value);
-        }
-        if ($handler) {
-            //ini_set('session.save_handler', 'user');
+    public function __construct($start = true, \SessionHandlerInterface $handler = null) {
+        if (!$this->isStarted() && $handler) {
             session_set_save_handler($handler);
             register_shutdown_function('session_write_close');
         }
