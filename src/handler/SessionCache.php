@@ -2,6 +2,7 @@
 
 namespace vakata\session\handler;
 
+use vakata\cache\CacheException;
 use \vakata\cache\CacheInterface;
 
 /**
@@ -34,7 +35,9 @@ class SessionCache implements \SessionHandlerInterface
      */
     public function destroy(string $sessionID): bool
     {
-        $this->cache->delete($sessionID, $this->table);
+        try {
+            $this->cache->delete($sessionID, $this->table);
+        } catch (CacheException $ignore) {}
         return true;
     }
     /**
