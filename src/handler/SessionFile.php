@@ -29,7 +29,7 @@ class SessionFile implements \SessionHandlerInterface
      */
     public function destroy(string $sessionID): bool
     {
-        $file = $this->location . DIRECTORY_SEPARATOR . $this->prefix . $sessionID;
+        $file = $this->location . DIRECTORY_SEPARATOR . $this->prefix . basename($sessionID);
         if (file_exists($file)) {
             @unlink($file);
         }
@@ -75,7 +75,7 @@ class SessionFile implements \SessionHandlerInterface
      */
     public function read(string $sessionID): string
     {
-        return (string)@file_get_contents($this->location . DIRECTORY_SEPARATOR . $this->prefix . $sessionID);
+        return (string)@file_get_contents($this->location . DIRECTORY_SEPARATOR . $this->prefix . basename($sessionID));
     }
     /**
      * Write session data
@@ -86,7 +86,7 @@ class SessionFile implements \SessionHandlerInterface
     public function write(string $sessionID, string $sessionData): bool
     {
         return @file_put_contents(
-            $this->location . DIRECTORY_SEPARATOR . $this->prefix . $sessionID,
+            $this->location . DIRECTORY_SEPARATOR . $this->prefix . basename($sessionID),
             $sessionData
         ) !== false;
     }
