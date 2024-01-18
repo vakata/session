@@ -11,17 +11,17 @@ use \vakata\cache\CacheInterface;
 class SessionCache implements \SessionHandlerInterface
 {
     private $cache = null;
-    private $table = null;
+    private $prefix = '';
     private $expire = 1440;
     /**
      * Create an instance.
      * @param  \vakata\cache\CacheInterface $cache the cache instance
      * @param  string                       $table the cache namespace to use
      */
-    public function __construct(CacheInterface $cache, $table = 'sessions')
+    public function __construct(CacheInterface $cache, $prefix = 'sessions')
     {
         $this->cache = $cache;
-        $this->table = $table;
+        $this->prefix = $prefix;
         $this->expire = (int)ini_get('session.gc_maxlifetime');
     }
     public function close(): bool
@@ -36,7 +36,7 @@ class SessionCache implements \SessionHandlerInterface
     public function destroy(string $sessionID): bool
     {
         try {
-            $this->cache->delete($sessionID, $this->table);
+            $this->cache->delete($this->prefix . $sessionID);
         } catch (CacheException $ignore) {}
         return true;
     }
@@ -66,7 +66,7 @@ class SessionCache implements \SessionHandlerInterface
      */
     public function read(string $sessionID): string
     {
-        return $this->cache->get($sessionID, '', $this->table);
+        return $this->cache->get($this->prefix . $sessionID, '');
     }
     /**
      * Write session data
@@ -76,7 +76,7 @@ class SessionCache implements \SessionHandlerInterface
      */
     public function write(string $sessionID, string $sessionData): bool
     {
-        $this->cache->set($sessionID, $sessionData, $this->table, $this->expire);
+        $this->cache->set($this->prefix . $sessionID, $sessionData, $this->expire);
         return true;
     }
 }
