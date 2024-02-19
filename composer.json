@@ -18,7 +18,7 @@
     "require": {
         "php" : ">=8.0",
         "vakata/kvstore" : ">=1.0.2",
-        "vakata/database" : "^4.0.0",
+        "vakata/database" : "^4.0.0|^5.0.0",
         "vakata/cache" : ">=3.0.0"
     },
     "autoload": {
