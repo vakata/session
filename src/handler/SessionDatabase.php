@@ -39,7 +39,7 @@ class SessionDatabase implements \SessionHandlerInterface
      * @param  int  $maxlifetime the session maxlifetime
      * @return int                 was gc executed OK
      */
-    public function gc(int $maxlifetime): bool
+    public function gc(int $maxlifetime): int
     {
         return $this->db->query(
             "DELETE FROM {$this->tb} WHERE updated < ?",

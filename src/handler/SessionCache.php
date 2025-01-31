@@ -16,7 +16,7 @@ class SessionCache implements \SessionHandlerInterface
     /**
      * Create an instance.
      * @param  \vakata\cache\CacheInterface $cache the cache instance
-     * @param  string                       $table the cache namespace to use
+     * @param  string                       $prefix the cache namespace to use
      */
     public function __construct(CacheInterface $cache, $prefix = 'sessions')
     {
@@ -42,8 +42,8 @@ class SessionCache implements \SessionHandlerInterface
     }
     /**
      * Clean sessions
-     * @param  string  $maxlifetime the session maxlifetime
-     * @return bool                 was gc executed OK
+     * @param  int  $maxlifetime the session maxlifetime
+     * @return int                 was gc executed OK
      */
     public function gc(int $maxlifetime): int
     {

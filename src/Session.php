@@ -14,7 +14,7 @@ class Session implements StorageInterface
      * @param  boolean                       $start    should the session be started immediately, defaults to true
      * @param  \SessionHandlerInterface|null $handler  a session handler (if any)
      */
-    public function __construct($start = true, \SessionHandlerInterface $handler = null) {
+    public function __construct($start = true, ?\SessionHandlerInterface $handler = null) {
         if (!$this->isStarted() && $handler) {
             session_set_save_handler($handler);
             register_shutdown_function('session_write_close');
