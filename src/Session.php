@@ -21,7 +21,7 @@ class Session implements SessionInterface
      */
     public function __construct(\SessionHandlerInterface $handler, int $maxlifetime = 1440) {
         $this->handler = $handler;
-        $this->storage = new Storage();
+        $this->storage = new Storage($this->data);
         $this->maxlifetime = $maxlifetime;
         register_shutdown_function([$this, 'close']);
     }
@@ -70,9 +70,6 @@ class Session implements SessionInterface
     {
         if ($this->isStarted()) {
             $this->handler->write($this->id, json_encode($this->data));
-            $this->data = [];
-            $this->id = '';
-            $this->started = false;
         }
     }
     /**
@@ -86,6 +83,7 @@ class Session implements SessionInterface
             $this->data = [];
             $this->id = '';
             $this->started = false;
+            $this->storage = new Storage($this->data);
         }
     }
     /**
