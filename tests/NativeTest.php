@@ -1,7 +1,7 @@
 <?php
 namespace vakata\session\test;
 
-class SessionTest extends \PHPUnit\Framework\TestCase
+class NativeTest extends \PHPUnit\Framework\TestCase
 {
 	protected static $session = null;
 
@@ -12,7 +12,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
 	}
 
 	public function testCreate() {
-		self::$session = new \vakata\session\Session(new \vakata\session\handler\SessionCache(new \vakata\cache\Redis(), 'test'));
+		self::$session = new \vakata\session\Native();
 		$this->assertEquals(null, self::$session->get('initial'));
 	}
 	/**
@@ -21,6 +21,14 @@ class SessionTest extends \PHPUnit\Framework\TestCase
 	public function testSet() {
 		$this->assertEquals(2, self::$session->set('initial', 2));
 		$this->assertEquals(2, self::$session->get('initial'));
+		$this->assertEquals(2, $_SESSION['initial']);
+	}
+	/**
+	 * @depends testSet
+	 */
+	public function testGet() {
+		$_SESSION['test'] = 1;
+		$this->assertEquals(1, self::$session->get('test'));
 	}
 	/**
 	 * @depends testSet
@@ -28,5 +36,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
 	public function testDel() {
 		$this->assertEquals(true, self::$session->del('initial'));
 		$this->assertEquals(null, self::$session->get('initial'));
+		unset($_SESSION['test']);
+		$this->assertEquals(null, self::$session->get('test'));
 	}
 }

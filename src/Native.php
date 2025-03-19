@@ -2,55 +2,41 @@
 
 namespace vakata\session;
 
-use SessionHandlerInterface;
 use \vakata\kvstore\StorageInterface;
 use \vakata\kvstore\Storage;
 
-class Session implements SessionInterface
+class Native implements SessionInterface
 {
-    protected bool $started = false;
-    protected int $maxlifetime = 1440;
-    protected string $id = '';
-    protected array $data = [];
     protected StorageInterface $storage;
-    protected SessionHandlerInterface $handler;
 
     /**
      * creates a session object
      * @param  \SessionHandlerInterface|null $handler  a session handler (if any)
      */
-    public function __construct(\SessionHandlerInterface $handler, int $maxlifetime = 1440) {
-        $this->handler = $handler;
-        $this->storage = new Storage();
-        $this->maxlifetime = $maxlifetime;
-        register_shutdown_function([$this, 'close']);
+    public function __construct(?\SessionHandlerInterface $handler = null, ?int $maxlifetime = null) {
+        if (!$this->isStarted() && $handler) {
+            session_set_save_handler($handler);
+            register_shutdown_function('session_write_close');
+            if ($maxlifetime) {
+                ini_set('session.gc_maxlifetime', $maxlifetime);
+            }
+        }
+        $this->storage = isset($_SESSION) ? new Storage($_SESSION) : new Storage();
+    }
+    public function id(): string
+    {
+        return $this->isStarted() ? session_id() : '';
     }
     /**
      * starts the session (if not done already)
      * @codeCoverageIgnore
      */
-    public function id(): string
-    {
-        return $this->id;
-    }
     public function start(string $id = ''): void
     {
-        if (random_int(0,100) < 5) {
-            $this->handler->gc($this->maxlifetime);
+        if (!$this->isStarted()) {
+            session_start();
+            $this->storage = new Storage($_SESSION);
         }
-        if ($this->isStarted()) {
-            $this->close();
-        }
-        if ($id === '' || !$this->handler->read($id)) {
-            do {
-                $id = bin2hex(random_bytes(20));
-            } while ($this->handler->read($id) !== '');
-        }
-        $data = $this->handler->read($id);
-        $data = json_decode($data);
-        $this->data = is_array($data) ? $data : [];
-        $this->storage = new Storage($this->data);
-        $this->started = true;
     }
     /**
      * checks if the session is started
@@ -59,7 +45,7 @@ class Session implements SessionInterface
      */
     public function isStarted(): bool
     {
-        return $this->started;
+        return session_status() === PHP_SESSION_ACTIVE;
     }
 
     /**
@@ -69,10 +55,7 @@ class Session implements SessionInterface
     public function close(): void
     {
         if ($this->isStarted()) {
-            $this->handler->write($this->id, json_encode($this->data));
-            $this->data = [];
-            $this->id = '';
-            $this->started = false;
+            session_write_close();
         }
     }
     /**
@@ -82,10 +65,7 @@ class Session implements SessionInterface
     public function destroy(): void
     {
         if ($this->isStarted()) {
-            $this->handler->destroy($this->id);
-            $this->data = [];
-            $this->id = '';
-            $this->started = false;
+            session_destroy();
         }
     }
     /**
@@ -96,14 +76,7 @@ class Session implements SessionInterface
     public function regenerate(bool $deleteOld = true): void
     {
         if ($this->isStarted()) {
-            if ($deleteOld) {
-                $this->handler->destroy($this->id);
-            }
-            do {
-                $id = bin2hex(random_bytes(20));
-            } while ($this->handler->read($id) !== '');
-            $this->id = $id;
-            $this->handler->write($this->id, json_encode($this->data));
+            session_regenerate_id($deleteOld);
         }
     }
     /**

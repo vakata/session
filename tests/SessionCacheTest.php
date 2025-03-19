@@ -1,21 +1,13 @@
 <?php
 namespace vakata\session\test;
 
-class SessionCacheTest extends \PHPUnit_Framework_TestCase
+class SessionCacheTest extends \PHPUnit\Framework\TestCase
 {
 	protected static $db = null;
 	protected static $sessionDB = null;
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		self::$db = new \vakata\cache\Redis();
-	}
-	public static function tearDownAfterClass() {
-	}
-	protected function setUp() {
-		// self::$db->query("TRUNCATE TABLE test;");
-	}
-	protected function tearDown() {
-		// self::$db->query("TRUNCATE TABLE test;");
 	}
 
 	public function testCreate() {
@@ -31,9 +23,9 @@ class SessionCacheTest extends \PHPUnit_Framework_TestCase
 	}
 	public function testWrite() {
 		$this->assertEquals(true, self::$sessionDB->write('test', 'test'));
-		$this->assertEquals('test', self::$db->get('test', null, 'test'));
+		$this->assertEquals('test', self::$db->get('testtest', null));
 		$this->assertEquals(true, self::$sessionDB->write('test', 'test2'));
-		$this->assertEquals('test2', self::$db->get('test', null, 'test'));
+		$this->assertEquals('test2', self::$db->get('testtest', null));
 	}
 	/**
 	 * @depends testWrite
@@ -47,7 +39,7 @@ class SessionCacheTest extends \PHPUnit_Framework_TestCase
 	 * @depends testWrite
 	 */
 	public function testGc() {
-		$this->assertEquals(true, self::$sessionDB->gc(1));
+		$this->assertEquals(0, self::$sessionDB->gc(1));
 	}
 	/**
 	 * @depends testWrite

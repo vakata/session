@@ -1,30 +1,24 @@
 <?php
 namespace vakata\session\test;
 
-class SessionFileTest extends \PHPUnit_Framework_TestCase
+class SessionFileTest extends \PHPUnit\Framework\TestCase
 {
 	protected static $dir = null;
 	protected static $sessionDB = null;
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		self::$dir = __DIR__ . '/data';
 		if (!is_dir(self::$dir)) {
 			mkdir(self::$dir);
 		}
 	}
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		foreach (scandir(self::$dir) as $file) {
 			if (is_file(self::$dir . DIRECTORY_SEPARATOR . $file)) {
 				unlink(self::$dir . DIRECTORY_SEPARATOR . $file);
 			}
 		}
 		rmdir(self::$dir);
-	}
-	protected function setUp() {
-		// self::$db->query("TRUNCATE TABLE test;");
-	}
-	protected function tearDown() {
-		// self::$db->query("TRUNCATE TABLE test;");
 	}
 
 	public function testCreate() {
@@ -56,7 +50,7 @@ class SessionFileTest extends \PHPUnit_Framework_TestCase
 	 * @depends testWrite
 	 */
 	public function testGc() {
-		$this->assertEquals(true, self::$sessionDB->gc(1));
+		$this->assertEquals(0, self::$sessionDB->gc(1));
 	}
 	/**
 	 * @depends testWrite

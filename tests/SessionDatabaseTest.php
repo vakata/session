@@ -1,13 +1,13 @@
 <?php
 namespace vakata\session\test;
 
-class SessionDatabaseTest extends \PHPUnit_Framework_TestCase
+class SessionDatabaseTest extends \PHPUnit\Framework\TestCase
 {
 	protected static $db = null;
 	protected static $sessionDB = null;
 
-	public static function setUpBeforeClass() {
-		self::$db = new \vakata\database\DB('mysqli://root@127.0.0.1/test');
+	public static function setUpBeforeClass(): void {
+		self::$db = new \vakata\database\DB('mysqli://test@127.0.0.1/test');
 		self::$db->query("
 			CREATE TEMPORARY TABLE IF NOT EXISTS test (
 				id varchar(255) NOT NULL,
@@ -18,16 +18,10 @@ class SessionDatabaseTest extends \PHPUnit_Framework_TestCase
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		");
 	}
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		self::$db->query("
 			DROP TEMPORARY TABLE test;
 		");
-	}
-	protected function setUp() {
-		// self::$db->query("TRUNCATE TABLE test;");
-	}
-	protected function tearDown() {
-		// self::$db->query("TRUNCATE TABLE test;");
 	}
 
 	public function testCreate() {
