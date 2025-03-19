@@ -1,3 +1,4 @@
+
 <?php
 
 namespace vakata\session;
@@ -46,8 +47,9 @@ class Session implements SessionInterface
                 $id = bin2hex(random_bytes(20));
             } while ($this->handler->read($id) !== '');
         }
+        $this->id = $id;
         $data = $this->handler->read($id);
-        $data = json_decode($data);
+        $data = json_decode($data, true);
         $this->data = is_array($data) ? $data : [];
         $this->storage = new Storage($this->data);
         $this->started = true;
