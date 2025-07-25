@@ -29,11 +29,14 @@ class Session implements SessionInterface
      * starts the session (if not done already)
      * @codeCoverageIgnore
      */
-    public function id(): string
+    public function id(?string $id = null): string
     {
+        if (isset($id)) {
+            $this->id = $id;
+        }
         return $this->id;
     }
-    public function start(string $id = ''): void
+    public function start(?string $id = null): void
     {
         if (random_int(0,100) < 5) {
             $this->handler->gc($this->maxlifetime);
@@ -41,13 +44,16 @@ class Session implements SessionInterface
         if ($this->isStarted()) {
             $this->close();
         }
-        if ($id === '' || !$this->handler->read($id)) {
+        if (isset($id)) {
+            $this->id($id);
+        }
+        if ($this->id === '' || !$this->handler->read($this->id)) {
             do {
                 $id = bin2hex(random_bytes(20));
             } while ($this->handler->read($id) !== '');
+            $this->id($id);
         }
-        $this->id = $id;
-        $data = $this->handler->read($id);
+        $data = $this->handler->read($this->id);
         $data = json_decode($data, true);
         $this->data = is_array($data) ? $data : [];
         $this->storage = new Storage($this->data);
