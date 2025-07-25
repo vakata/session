@@ -23,7 +23,7 @@ class Native implements SessionInterface
         }
         $this->storage = isset($_SESSION) ? new Storage($_SESSION) : new Storage();
     }
-    public function id(): string
+    public function id(?string $id = null): string
     {
         return $this->isStarted() ? session_id() : '';
     }
@@ -31,7 +31,7 @@ class Native implements SessionInterface
      * starts the session (if not done already)
      * @codeCoverageIgnore
      */
-    public function start(string $id = ''): void
+    public function start(?string $id = null): void
     {
         if (!$this->isStarted()) {
             session_start();
